@@ -131,7 +131,7 @@ function App() {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
           >
-            Weather App 🌦️
+            Weather Update 🌦️
           </motion.h1>
 
           {/* Input and Search */}
