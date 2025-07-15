@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+.bg-sun-light {
+  @apply bg-gradient-to-br from-yellow-400 via-yellow-300 to-orange-400;
+}
+.bg-cloud-light {
+  @apply bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500;
+}
+.bg-rain-light {
+  @apply bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600;
+}
+.bg-snow-light {
+  @apply bg-gradient-to-br from-blue-100 via-white to-blue-200;
+}
+.bg-default-light {
+  @apply bg-gradient-to-br from-indigo-400 to-cyan-400;
+}
+
+/* Dark variants */
+.bg-sun-dark {
+  @apply bg-gradient-to-br from-yellow-800 via-yellow-700 to-orange-800;
+}
+.bg-cloud-dark {
+  @apply bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900;
+}
+.bg-rain-dark {
+  @apply bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700;
+}
+.bg-snow-dark {
+  @apply bg-gradient-to-br from-slate-500 via-white/30 to-blue-400;
+}
+.bg-default-dark {
+  @apply bg-gradient-to-br from-slate-800 to-slate-900;
+}
