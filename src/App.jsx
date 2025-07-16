@@ -64,15 +64,17 @@ function App() {
 
   // Initial location fetch
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fetchWeather(`${latitude},${longitude}`);
-      },
-      () => {
-        fetchWeather("London");
-      }
-    );
+    // Wait 2 seconds after load before requesting location
+    const id = setTimeout(() => {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => fetchWeather(`${pos.coords.latitude},${pos.coords.longitude}`),
+        (err) => {
+          console.warn("Geo denied:", err);
+          fetchWeather("London");
+        }
+      );
+    }, 2000);
+    return () => clearTimeout(id);
   }, []);
 
   // Re-fetch weather on language change
@@ -150,6 +152,20 @@ function App() {
               Search
             </button>
           </div>
+          <button
+            onClick={() =>
+              navigator.geolocation.getCurrentPosition(
+                (pos) =>
+                  fetchWeather(
+                    `${pos.coords.latitude},${pos.coords.longitude}`
+                  ),
+                () => fetchWeather("London")
+              )
+            }
+            className="bg-white text-blue-600 px-4 py-1 rounded-lg mt-4"
+          >
+            Use My Location
+          </button>
 
           {/* Error */}
           {error && <p className="text-red-300 mt-4">{error}</p>}
