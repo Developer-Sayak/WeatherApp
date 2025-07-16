@@ -38,11 +38,13 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [unit, setUnit] = useState("C");
   const [lang, setLang] = useState("en");
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchWeather = async (query) => {
     try {
+      setIsLoading(true);
       const res = await fetch(
-        `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${query}&days=3&aqi=yes&alerts=yes&lang=${lang}`
+        `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${query}&days=3&aqi=yes&lang=${lang}`
       );
       if (!res.ok) throw new Error("City not found");
       const data = await res.json();
@@ -51,6 +53,8 @@ function App() {
     } catch (err) {
       setWeather(null);
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,7 +124,7 @@ function App() {
             >
               <option value="en">🇬🇧 EN</option>
               <option value="hi">🇮🇳 HI</option>
-              <option value="bn">🇧🇩 বাংলা</option>
+              <option value="bn">🇮🇳 বাংলা</option>
               <option value="es">🇪🇸 ES</option>
               <option value="ja">🇯🇵 JA</option>
               <option value="fr">🇫🇷 FR</option>
@@ -147,25 +151,42 @@ function App() {
             />
             <button
               onClick={handleSearch}
-              className="bg-white text-blue-700 px-4 py-2 rounded-xl font-semibold hover:bg-white/90"
+              disabled={isLoading}
+              className={`bg-white text-blue-700 px-4 py-2 rounded-xl font-semibold hover:bg-white/90 transition ${
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               Search
             </button>
           </div>
+          <br />
           <button
-            onClick={() =>
+            onClick={() => {
               navigator.geolocation.getCurrentPosition(
-                (pos) =>
-                  fetchWeather(
-                    `${pos.coords.latitude},${pos.coords.longitude}`
-                  ),
-                () => fetchWeather("London")
-              )
-            }
-            className="bg-white text-blue-600 px-4 py-1 rounded-lg mt-4"
+                (pos) => {
+                  const coords = `${pos.coords.latitude},${pos.coords.longitude}`;
+                  setCity(""); // clear city input
+                  fetchWeather(coords);
+                },
+                (err) => {
+                  console.error("Geolocation error:", err.message);
+                  setError("Unable to fetch your location.");
+                  fetchWeather("London");
+                }
+              );
+            }}
+            disabled={isLoading}
+            className={`bg-white text-blue-700 px-4 py-2 rounded-xl font-semibold hover:bg-white/90 transition ${
+              isLoading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             Use My Location
           </button>
+          {isLoading && (
+            <div className="mt-4 flex justify-center">
+              <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
 
           {/* Error */}
           {error && <p className="text-red-300 mt-4">{error}</p>}
