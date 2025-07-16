@@ -44,7 +44,7 @@ function App() {
     try {
       setIsLoading(true);
       const res = await fetch(
-        `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${query}&days=3&aqi=yes&lang=${lang}`
+        `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${query}&days=3&aqi=yes&lang=${lang}`
       );
       if (!res.ok) throw new Error("City not found");
       const data = await res.json();
